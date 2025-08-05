@@ -1,94 +1,69 @@
 import * as React from 'react';
-import { Button, FormControl, Input } from 'frontend/components';
-import { ButtonType } from 'frontend/types/button';
-import { Task } from 'frontend/types/tasks';
+import './task-form.styles.css';
 
 interface TaskFormProps {
-  task?: Task;
   onSubmit: (data: { title: string; description: string }) => void;
-  onCancel: () => void;
   isLoading?: boolean;
-  submitText?: string;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({
-  task,
-  onSubmit,
-  onCancel,
-  isLoading = false,
-  submitText = 'Save Task',
-}) => {
-  const [title, setTitle] = React.useState(task?.title || '');
-  const [description, setDescription] = React.useState(task?.description || '');
-  const [errors, setErrors] = React.useState<{
-    title?: string;
-    description?: string;
-  }>({});
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, isLoading = false }) => {
+  const [newTaskTitle, setNewTaskTitle] = React.useState('');
+  const [newTaskDescription, setNewTaskDescription] = React.useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newErrors: { title?: string; description?: string } = {};
-
-    if (!title.trim()) {
-      newErrors.title = 'Title is required';
+  const handleAddTask = () => {
+    if (newTaskTitle.trim() && newTaskDescription.trim()) {
+      onSubmit({
+        title: newTaskTitle.trim(),
+        description: newTaskDescription.trim(),
+      });
+      setNewTaskTitle('');
+      setNewTaskDescription('');
     }
+  };
 
-    if (!description.trim()) {
-      newErrors.description = 'Description is required';
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
+      e.preventDefault();
+      handleAddTask();
     }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    onSubmit({ title: title.trim(), description: description.trim() });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="task-form">
-      <FormControl label="Title" error={errors.title}>
-        <Input
-          id="task-title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter task title"
-          disabled={isLoading}
-        />
-        {errors.title && <span className="error-text">{errors.title}</span>}
-      </FormControl>
-
-      <FormControl label="Description" error={errors.description}>
-        <textarea
-          id="task-description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter task description"
-          disabled={isLoading}
-          rows={4}
-          className="task-description-textarea"
-        />
-        {errors.description && (
-          <span className="error-text">{errors.description}</span>
-        )}
-      </FormControl>
-
-      <div className="task-form-actions">
-        <Button
-          type={ButtonType.BUTTON}
-          onClick={onCancel}
-          disabled={isLoading}
+    <div className="task-input-container">
+      <div className="task-input-form">
+        <div className="task-input-fields">
+          <input
+            type="text"
+            className="task-input-title"
+            placeholder="Add new task"
+            value={newTaskTitle}
+            onChange={(e) => setNewTaskTitle(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={isLoading}
+          />
+          <textarea
+            className="task-input-description"
+            placeholder="Description"
+            value={newTaskDescription}
+            onChange={(e) => setNewTaskDescription(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={isLoading}
+            rows={2}
+          />
+        </div>
+        <button
+          type="button"
+          className="task-add-button"
+          onClick={handleAddTask}
+          disabled={
+            !newTaskTitle.trim() || !newTaskDescription.trim() || isLoading
+          }
+          title="Add task (Ctrl+Enter)"
         >
-          Cancel
-        </Button>
-        <Button type={ButtonType.SUBMIT} disabled={isLoading}>
-          {isLoading ? 'Saving...' : submitText}
-        </Button>
+          +
+        </button>
       </div>
-    </form>
+    </div>
   );
 };
 

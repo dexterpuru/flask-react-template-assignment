@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { Button } from 'frontend/components';
 import { Task } from 'frontend/types/tasks';
+import { TaskForm } from 'frontend/components/task-form';
 import TaskItem from './task-item.component';
+import './task-list.styles.css';
 
 interface TaskListProps {
   tasks: Task[];
-  onCreateNew: () => void;
+  onCreateNew: (data: { title: string; description: string }) => void;
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
-  onView: (task: Task) => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
   isLoading?: boolean;
+  isCreating?: boolean;
   deletingTaskId?: string;
 }
 
@@ -20,28 +22,28 @@ const TaskList: React.FC<TaskListProps> = ({
   onCreateNew,
   onEdit,
   onDelete,
-  onView,
   onLoadMore,
   hasMore = false,
   isLoading = false,
+  isCreating = false,
   deletingTaskId,
 }) => {
   if (tasks.length === 0 && !isLoading) {
     return (
-      <div className="task-list-empty">
-        <h3>No tasks yet</h3>
-        <p>Create your first task to get started.</p>
-        <Button onClick={onCreateNew}>Create Task</Button>
+      <div className="task-list">
+        <TaskForm onSubmit={onCreateNew} isLoading={isCreating} />
+
+        <div className="task-list-empty">
+          <h3>No tasks yet</h3>
+          <p>Create your first task to get started.</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="task-list">
-      <div className="task-list-header">
-        <h2>Tasks</h2>
-        <Button onClick={onCreateNew}>Create New Task</Button>
-      </div>
+      <TaskForm onSubmit={onCreateNew} isLoading={isCreating} />
 
       <div className="task-list-items">
         {tasks.map((task) => (
@@ -50,7 +52,6 @@ const TaskList: React.FC<TaskListProps> = ({
             task={task}
             onEdit={onEdit}
             onDelete={onDelete}
-            onView={onView}
             isDeleting={deletingTaskId === task.id}
           />
         ))}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Task } from 'frontend/types/tasks';
-import { TaskForm } from 'frontend/components/task-form';
+// import { TaskForm } from 'frontend/components/task-form';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -14,8 +14,8 @@ interface TaskModalProps {
 const TaskModal: React.FC<TaskModalProps> = ({
   isOpen,
   onClose,
-  task,
-  onSubmit,
+  // task,
+  // onSubmit,
   isLoading = false,
   title,
 }) => {
@@ -42,13 +42,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
           </button>
         </div>
         <div className="task-modal-body">
-          <TaskForm
-            task={task}
-            onSubmit={onSubmit}
-            onCancel={onClose}
-            isLoading={isLoading}
-            submitText={task ? 'Update Task' : 'Create Task'}
-          />
+          {/* TaskForm component removed - TaskModal is unused */}
+          <p>TaskModal is deprecated and unused</p>
         </div>
       </div>
     </div>

@@ -1,50 +1,88 @@
-.task-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-width: 100%;
+.task-input-container {
+  padding: 2rem !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%) !important;
+  position: relative !important;
 }
 
-.task-description-textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    resize: vertical;
-    min-height: 120px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.task-input-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
 }
 
-.task-description-textarea:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+.task-input-form {
+  display: flex !important;
+  gap: 1rem !important;
+  align-items: flex-start !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
-.task-description-textarea:disabled {
-    background-color: #f9fafb;
-    cursor: not-allowed;
-    opacity: 0.6;
+.task-input-fields {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
 }
 
-.task-description-textarea.error {
-    border-color: #ef4444;
+.task-input-title, .task-input-description {
+  padding: 0.75rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 6px !important;
+  font-size: 0.9rem !important;
+  resize: none !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #333 !important;
 }
 
-.task-form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
-    margin-top: 1rem;
+.task-input-title::placeholder, .task-input-description::placeholder {
+  color: #666 !important;
 }
 
-@media (max-width: 640px) {
-    .task-form-actions {
-        flex-direction: column-reverse;
-    }
+.task-input-title:focus, .task-input-description:focus {
+  outline: none !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.task-input-description {
+  min-height: 60px !important;
+}
+
+.task-add-button {
+  background: #6366f1 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 1.2rem !important;
+  transition: background-color 0.2s ease !important;
+  flex-shrink: 0 !important;
+  margin-top: 0 !important;
+}
+
+.task-add-button:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.task-add-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
