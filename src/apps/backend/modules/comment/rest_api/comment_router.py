@@ -17,3 +17,5 @@ class CommentRouter:
             view_func=comment_view,
             methods=["GET", "PATCH", "DELETE"],
         )
+
+        return blueprint
