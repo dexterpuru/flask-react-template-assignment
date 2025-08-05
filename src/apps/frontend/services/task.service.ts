@@ -1,5 +1,5 @@
 import APIService from 'frontend/services/api.service';
-import { ApiResponse } from 'frontend/types';
+import { ApiResponse, AccessToken } from 'frontend/types';
 import {
   Task,
   CreateTaskRequest,
@@ -8,9 +8,18 @@ import {
 } from 'frontend/types';
 
 export default class TaskService extends APIService {
+  private getAuthHeaders(accessToken: AccessToken) {
+    return {
+      headers: {
+        Authorization: `Bearer ${accessToken.token}`,
+      },
+    };
+  }
+
   createTask = async (
     accountId: string,
     taskData: CreateTaskRequest,
+    accessToken: AccessToken,
   ): Promise<ApiResponse<Task>> => {
     const response = await this.apiClient.post<Task>(
       `/accounts/${accountId}/tasks`,
@@ -18,6 +27,7 @@ export default class TaskService extends APIService {
         title: taskData.title,
         description: taskData.description,
       },
+      this.getAuthHeaders(accessToken),
     );
     return new ApiResponse(response.data);
   };
@@ -26,9 +36,11 @@ export default class TaskService extends APIService {
     accountId: string,
     page: number = 1,
     size: number = 10,
+    accessToken: AccessToken,
   ): Promise<ApiResponse<TasksResponse>> => {
     const response = await this.apiClient.get<TasksResponse>(
       `/accounts/${accountId}/tasks?page=${page}&size=${size}`,
+      this.getAuthHeaders(accessToken),
     );
     return new ApiResponse(response.data);
   };
@@ -36,9 +48,11 @@ export default class TaskService extends APIService {
   getTask = async (
     accountId: string,
     taskId: string,
+    accessToken: AccessToken,
   ): Promise<ApiResponse<Task>> => {
     const response = await this.apiClient.get<Task>(
       `/accounts/${accountId}/tasks/${taskId}`,
+      this.getAuthHeaders(accessToken),
     );
     return new ApiResponse(response.data);
   };
@@ -47,6 +61,7 @@ export default class TaskService extends APIService {
     accountId: string,
     taskId: string,
     taskData: UpdateTaskRequest,
+    accessToken: AccessToken,
   ): Promise<ApiResponse<Task>> => {
     const response = await this.apiClient.patch<Task>(
       `/accounts/${accountId}/tasks/${taskId}`,
@@ -54,6 +69,7 @@ export default class TaskService extends APIService {
         title: taskData.title,
         description: taskData.description,
       },
+      this.getAuthHeaders(accessToken),
     );
     return new ApiResponse(response.data);
   };
@@ -61,8 +77,12 @@ export default class TaskService extends APIService {
   deleteTask = async (
     accountId: string,
     taskId: string,
+    accessToken: AccessToken,
   ): Promise<ApiResponse<void>> => {
-    await this.apiClient.delete(`/accounts/${accountId}/tasks/${taskId}`);
+    await this.apiClient.delete(
+      `/accounts/${accountId}/tasks/${taskId}`,
+      this.getAuthHeaders(accessToken),
+    );
     return new ApiResponse(undefined);
   };
 }
